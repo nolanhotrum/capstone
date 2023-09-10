@@ -111,7 +111,7 @@ ul{
 }
 
 /* Responsiveness */
-@media (min-width: 768px) {
+@media (min-width: 868px) {
     .nav{
         max-height: none;
         top: 0;
@@ -141,12 +141,12 @@ ul{
 }
 
 
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 868px) {
     .longName { 
         display: none;
     }
 }
-@media screen and (min-width: 769px) {
+@media screen and (min-width: 869px) {
     .shortName {
         display: none; 
     } 
