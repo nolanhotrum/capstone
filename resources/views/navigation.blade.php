@@ -1,7 +1,8 @@
 <body>
 <header class="header">
     <!-- Logo -->
-    <a href="{{url('/')}}" class="logo">Dog's Way</a>
+    <a href="{{url('/')}}" class="longName">Dog's Way</a>
+    <a href="{{url('/')}}" class="shortName">DW</a>
     <!-- Hamburger icon -->
     <input class="side-menu" type="checkbox" id="side-menu"/>
     <label class="hamb" for="side-menu"><span class="hamb-line"></span></label>

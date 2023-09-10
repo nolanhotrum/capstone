@@ -34,13 +34,6 @@ ul{
     top: 0;
     width: 100%;
 }
-/* Logo */
-.logo{
-    display: inline-block;
-    color: var(--white);
-    font-size: 60px;
-    margin-left: 10px;
-}
 
 /* Nav menu */
 .nav{
@@ -135,8 +128,26 @@ ul{
         color: var(--gray);
 
     }
-
     .hamb{
         display: none;
     }
+}
+
+.longName, .shortName{
+    display: inline-block;
+    color: var(--white);
+    font-size: 60px;
+    margin-left: 10px;
+}
+
+
+@media screen and (max-width: 768px) {
+    .longName { 
+        display: none;
+    }
+}
+@media screen and (min-width: 769px) {
+    .shortName {
+        display: none; 
+    } 
 }
