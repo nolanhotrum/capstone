@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\UserAuthController;
 
 /*
 |--------------------------------------------------------------------------
@@ -19,4 +20,12 @@ Route::get('/', function () {
 
 Route::get('/login', function () {
     return view('login');
+});
+
+Route::controller(UserAuthController::class)->group(function () {
+    Route::get('/register', 'displayRegisterPage')->middleware("guest");
+    Route::post('/attempt_register', 'registerUser');
+    Route::get("/login", "displayLoginPage")->name("login")->middleware("guest");
+    Route::post("/attempt_login", "authenticate");
+    Route::get("/logout", "logout");
 });

@@ -13,7 +13,7 @@
             <li><a href="#">Blog</a> </li>
             <li><a href="#">About</a></li>
             <li><a href="{{url('/login')}}">Login</a></li>
-            <li><a href="{{url('/signup')}}">Signup</a></li>
+            <li><a href="{{url('/register')}}">Register</a></li>
         </ul>
     </nav>
 </header>
