@@ -24,7 +24,7 @@ class UserAuthController extends Controller
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
  
-            return redirect()->intended('manage');
+            return redirect()->intended('/');
         }
  
         return back()->withErrors([
@@ -42,12 +42,33 @@ class UserAuthController extends Controller
         return view("register");
     }
 
+    public function displayRecommendationPage()
+    {
+        return view("recommendation");
+    }
+
+    public function displayFeedbackPage()
+    {
+        return view("feedback");
+    }
+
+    public function displayParksPage()
+    {
+        return view("parks");
+    }
+
+    public function displayTrailsPage()
+    {
+        return view("trails");
+    }
+
     public function registerUser(Request $request)
     {
         $user = new User;
         $user->password = Hash::make( $request->input("password") );
         $user->email = $request->input("email");
         $user->name = $request->input("name");
+        $user->role = $request->input("role");
         $user->save();
 
         return view("login");

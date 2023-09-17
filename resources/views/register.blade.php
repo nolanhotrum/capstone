@@ -10,6 +10,12 @@
         <label for="email">Email: </label>
         <input id="email" type="email" name="email" value="{{ old('email') }}" required />
         <br /> <br />
+        <p>Role: </p>
+        <input type="radio" id="role1" name="role" value="1">
+        <label for="role1">Admin</label><br>
+        <input type="radio" id="role2" name="role" value="2">
+        <label for="role2">User</label><br>  
+        <br /> <br />
         <label for="password">Password: </label>
         <input id="password" type="password" name="password" required />
         <br /> <br />

@@ -18,6 +18,10 @@ Route::get('/', function () {
     return view('home');
 });
 
+Route::get('/home', function () {
+    return view('home');
+});
+
 Route::get('/login', function () {
     return view('login');
 });
@@ -28,4 +32,8 @@ Route::controller(UserAuthController::class)->group(function () {
     Route::get("/login", "displayLoginPage")->name("login")->middleware("guest");
     Route::post("/attempt_login", "authenticate");
     Route::get("/logout", "logout");
+    Route::get("/recommendation", "displayRecommendationPage");
+    Route::get("/feedback", "displayFeedbackPage");
+    Route::get("/parks", "displayParksPage");
+    Route::get("/trails", "displayTrailsPage");
 });

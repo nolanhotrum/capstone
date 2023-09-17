@@ -9,11 +9,16 @@
     <!-- Menu -->
     <nav class="nav">
         <ul class="menu">
-            <li><a href="#">Gallery</a></li>
-            <li><a href="#">Blog</a> </li>
-            <li><a href="#">About</a></li>
+            <li><a href="{{url('/trails')}}">Trails</a></li>
+            <li><a href="{{url('/parks')}}">Parks</a></li>
+            @if (auth()->check())
+            <li><a href="{{url('/recommendation')}}">Recommendation</a></li>
+            <li><a href="{{url('/feedback')}}">Feedback</a></li>
+            <li><a href="{{url('/logout')}}" >Logout</a></li>
+            @else
             <li><a href="{{url('/login')}}">Login</a></li>
             <li><a href="{{url('/register')}}">Register</a></li>
+            @endif
         </ul>
     </nav>
 </header>
