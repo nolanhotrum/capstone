@@ -11,6 +11,7 @@
         <label for="password">Password: </label>
         <input id="password" type="password" name="password" required />
         <br /> <br />
+        <a href="{{route('reset_password')}}">Forgot your password?</a>
         <input type="submit" value="Login" />
 
     </form>

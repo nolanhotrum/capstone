@@ -62,6 +62,16 @@ class UserAuthController extends Controller
         return view("trails");
     }
 
+    public function displayResetPage()
+    {
+        return view("passwordreset");
+    }
+
+    public function sendEmail()
+    {
+        return view("sentresetemail");
+    }
+
     public function registerUser(Request $request)
     {
         $user = new User;
@@ -84,5 +94,8 @@ class UserAuthController extends Controller
  
         return redirect('/login');
     }
+
+
+    
 
 }
