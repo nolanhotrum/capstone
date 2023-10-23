@@ -163,6 +163,18 @@ class LocationController extends Controller
   public function showMap()
   {
     $locations = Location::all(); // Retrieve all locations from the database
-    return view('home', ['locationsJson' => $locations->toJson()]);
+    return view('home', ['locations' => $locations, 'locationsJson' => $locations->toJson()]);
+  }
+
+
+  public function showLocation($id)
+  {
+    $location = Location::findOrFail($id);
+
+    // You can also check for the type_id and determine what type it is.
+    $type = ($location->type_id === 1) ? 'Park' : 'Trail';
+
+    // You can pass the type to the view if needed.
+    return view('show', compact('location', 'type'));
   }
 }

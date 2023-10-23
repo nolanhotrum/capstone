@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\LocationController;
+use App\Http\Controllers\ParkController;
 
 /*
 |--------------------------------------------------------------------------
@@ -41,14 +42,9 @@ Route::controller(ResetPasswordController::class)->group(function () {
 // Route::get('/insert-data-from-json', [LocationController::class, 'insertDataFromJson']);
 
 Route::get('/', [LocationController::class, 'showMap'])->name('home');
+Route::get('/locations/{id}', [LocationController::class, 'showLocation'])->name('locations.show');
 
-// Route::get('/', function () {
-//     return view('home');
-// });
 
-// Route::get('/home', function () {
-//     return view('home');
-// });
 
 Route::get('/login', function () {
     return view('login');
@@ -62,8 +58,15 @@ Route::controller(UserAuthController::class)->group(function () {
     Route::get("/login", "displayLoginPage")->name("login")->middleware("guest");
     Route::post("/attempt_login", "authenticate");
     Route::get("/logout", "logout");
-    Route::get("/recommendation", "displayRecommendationPage");
-    Route::get("/feedback", "displayFeedbackPage");
-    Route::get("/parks", "displayParksPage");
-    Route::get("/trails", "displayTrailsPage");
 });
+
+
+Route::middleware(['auth'])->group(function () {
+    Route::controller(UserAuthController::class)->group(function () {
+        Route::get("/recommendation", "displayRecommendationPage");
+        Route::get("/parks", "displayParksPage");
+        Route::get("/trails", "displayTrailsPage");
+    });
+});
+
+// Route::get('/parks/{park}', [ParkController::class, 'showParks'])->name('park.show');
