@@ -35,6 +35,9 @@ class CommentController extends Controller
 
         $comment->page_id = $location->id;
 
+        $comment->created_at = now();
+        $comment->updated_at = now();
+
         // Save the comment to the database
         $comment->save();
 
