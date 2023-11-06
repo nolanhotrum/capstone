@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Comment;
+use App\Models\Rating;
 
 class Location extends Model
 {
@@ -20,4 +22,15 @@ class Location extends Model
         'latitude',
         'add_info'
     ];
+
+    // Define the 'comments' relationship
+    public function comments()
+    {
+        return $this->hasMany(Comment::class, 'page_id');
+    }
+
+    public function ratings()
+    {
+        return $this->hasMany(Rating::class, 'park_id');
+    }
 }

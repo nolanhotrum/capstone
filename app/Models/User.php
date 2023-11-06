@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use App\Models\Rating;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
@@ -42,4 +43,14 @@ class User extends Authenticatable implements MustVerifyEmail
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    /**
+     * Define a relationship to fetch a user's ratings.
+     *
+     * @return HasMany
+     */
+    public function ratings()
+    {
+        return $this->hasMany(Rating::class, 'user_id');
+    }
 }

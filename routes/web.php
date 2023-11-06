@@ -13,7 +13,9 @@ use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\LocationController;
 use App\Http\Controllers\ParkController;
-
+use App\Http\Controllers\CommentController;
+use App\Http\Controllers\RatingController;
+use App\Http\Controllers\AdminController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -44,6 +46,16 @@ Route::controller(ResetPasswordController::class)->group(function () {
 Route::get('/', [LocationController::class, 'showMap'])->name('home');
 Route::get('/locations/{id}', [LocationController::class, 'showLocation'])->name('locations.show');
 
+Route::post('/locations/{id}/comments', [CommentController::class, 'store'])->name('locations.comments.store')->middleware('auth');
+
+Route::get('/locations/{id}/rate', [RatingController::class, 'showRatingView'])->name('locations.rate.view')->middleware('auth');
+
+Route::post('/locations/{id}/rate/{ratingId}', [RatingController::class, 'replace'])->name('locations.rate.replace')->middleware('auth');
+
+Route::post('/locations/{id}/rate', [RatingController::class, 'rate'])->name('locations.rate.submit')->middleware('auth');
+
+
+Route::get('/admin', [AdminController::class, 'showParkRequests'])->name('admin');
 
 
 Route::get('/login', function () {

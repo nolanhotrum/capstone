@@ -78,7 +78,7 @@ class UserAuthController extends Controller
         $user->password = Hash::make($request->input("password"));
         $user->email = $request->input("email");
         $user->name = $request->input("name");
-        $user->role = $request->input("role");
+        $user->role = 2;
         $user->save();
 
         return view("login");

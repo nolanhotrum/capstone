@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Location;
 use Illuminate\Http\Request;
+use App\Models\Comment;
 
 class LocationController extends Controller
 {
@@ -176,5 +177,26 @@ class LocationController extends Controller
 
     // You can pass the type to the view if needed.
     return view('show', compact('location', 'type'));
+  }
+
+  public function store(Request $request, $id)
+  {
+    $data = $request->validate([
+      'body' => 'required',
+    ]);
+
+    // Find the park by ID
+    $park = Location::find($id);
+
+    if (!$park) {
+      return abort(404); // Handle park not found
+    }
+
+    // Create a new comment associated with the park
+    $comment = new Comment($data);
+    $comment->page_id = $park->id; // Use 'page_id' as the foreign key
+    $comment->save();
+
+    return back()->with('success', 'Comment added successfully');
   }
 }
