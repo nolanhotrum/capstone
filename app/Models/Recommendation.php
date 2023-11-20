@@ -8,7 +8,7 @@ use App\Models\User;
 
 class Recommendation extends Model
 {
-    protected $fillable = ['user_id', 'park_name', 'type', 'address', 'add_info', 'status'];
+    protected $fillable = ['user_id', 'park_name', 'type', 'address', 'add_info', 'status', 'latitude', 'longitude'];
 
     public function user()
     {

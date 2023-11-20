@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Recommendation;
+use GuzzleHttp\Client;
 
 class RecommendationController extends Controller
 {
@@ -13,7 +14,6 @@ class RecommendationController extends Controller
         return view('recommendation')->with('success', 'Recommendation submitted successfully. Wait for approval or denial.');
     }
 
-    // Store a new recommendation in the database
     public function store(Request $request)
     {
         // Validate the form data
@@ -21,29 +21,75 @@ class RecommendationController extends Controller
             'park_name' => 'required|string|max:255',
             'type' => 'required|in:Park,Trail',
             'address' => 'required|string|max:255',
-            'more_info' => 'nullable|string',
+            'add_info' => 'nullable|string',
         ]);
 
-        // Check if the user already has a pending recommendation
-        $existingRecommendation = Recommendation::where('user_id', auth()->id())
-            ->where('status', 'pending')
-            ->first();
+        try {
+            // Check if the user already has a pending recommendation
+            $existingRecommendation = Recommendation::where('user_id', auth()->id())
+                ->where('status', 'pending')
+                ->first();
 
-        if ($existingRecommendation) {
+            if ($existingRecommendation) {
+                return redirect()->route('recommendation.create')
+                    ->with('error', 'You already have a pending recommendation. Wait for approval or denial.');
+            }
+
+            // Geocode the address to get latitude and longitude
+            $geoData = $this->geocodeAddress($request->input('address'));
+
+            // Check if geocoding was successful before storing latitude and longitude
+            if ($geoData && isset($geoData['lat']) && isset($geoData['lng'])) {
+                // Create and store the recommendation
+                $recommendation = Recommendation::create([
+                    'user_id' => auth()->id(),
+                    'park_name' => $request->input('park_name'),
+                    'type' => $request->input('type'),
+                    'address' => $request->input('address'),
+                    'add_info' => $request->input('add_info'),
+                    'latitude' => $geoData['lat'],
+                    'longitude' => $geoData['lng'],
+                ]);
+            } else {
+                // Handle the case where geocoding failed or the keys are missing
+                return redirect()->route('recommendation.create')
+                    ->with('error', 'Invalid address. Please enter a valid address.');
+            }
+
             return redirect()->route('recommendation.create')
-                ->with('error', 'You already have a pending recommendation. Wait for approval or denial.');
+                ->with('success', 'Recommendation submitted successfully. Wait for approval or denial.');
+        } catch (\Exception $e) {
+            return redirect()->route('recommendation.create')
+                ->with('error', 'An error occurred during recommendation submission. Please try again.');
         }
+    }
 
-        // Create and store the recommendation
-        $recommendation = Recommendation::create([
-            'user_id' => auth()->id(),
-            'park_name' => $request->input('park_name'),
-            'type' => $request->input('type'),
-            'address' => $request->input('address'),
-            'add_info' => $request->input('add_info'),
-        ]);
+    // Geocode an address using the Google Maps Geocoding API
+    private function geocodeAddress($address)
+    {
+        $apiKey = 'AIzaSyD-7uGxcXtxOHLNCj867iBF6CfAP0IDeFw'; // Update with your API key
 
-        return redirect()->route('recommendation.create')
-            ->with('success', 'Recommendation submitted successfully. Wait for approval or denial.');
+        $client = new Client();
+
+        $addressWithOntario = $address . ', Ontario, Canada';
+
+        try {
+            $response = $client->get('https://maps.googleapis.com/maps/api/geocode/json', [
+                'query' => [
+                    'address' => $addressWithOntario,
+                    'key' => $apiKey,
+                ],
+            ]);
+
+            $data = json_decode($response->getBody(), true);
+
+            if (isset($data['results'][0]['geometry']['location'])) {
+                return $data['results'][0]['geometry']['location'];
+            } else {
+                return null; // Return null instead of using dd
+            }
+        } catch (\Exception $e) {
+            return null; // Return null instead of using dd
+        }
     }
 }
