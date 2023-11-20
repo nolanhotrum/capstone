@@ -16,6 +16,9 @@ use App\Http\Controllers\ParkController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\RatingController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\ParksController;
+use App\Http\Controllers\TrailsController;
+use App\Http\Controllers\RecommendationController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -55,12 +58,25 @@ Route::post('/locations/{id}/rate/{ratingId}', [RatingController::class, 'replac
 Route::post('/locations/{id}/rate', [RatingController::class, 'rate'])->name('locations.rate.submit')->middleware('auth');
 
 
-Route::get('/admin', [AdminController::class, 'showParkRequests'])->name('admin');
+Route::middleware(['auth'])->group(function () {
+    Route::get('/admin', [AdminController::class, 'showParkRequests'])->name('admin');
+    Route::get('/admin/recommendation/{id}/{action}', [RecommendationController::class, 'approveDeny'])->name('admin.recommendation.approveDeny');
+});
+
 
 
 Route::get('/login', function () {
     return view('login');
 });
+
+
+
+Route::middleware(['auth'])->group(function () {
+    Route::get('/recommendation/create', [RecommendationController::class, 'create'])->name('recommendation.create');
+    Route::post('/recommendation', [RecommendationController::class, 'store'])->name('recommendation.store');
+});
+
+
 
 
 Route::controller(UserAuthController::class)->group(function () {
@@ -76,7 +92,7 @@ Route::controller(UserAuthController::class)->group(function () {
 Route::middleware(['auth'])->group(function () {
     Route::controller(UserAuthController::class)->group(function () {
         Route::get("/recommendation", "displayRecommendationPage");
-        Route::get("/parks", "displayParksPage");
+        Route::get('/parks', [ParksController::class, 'index']);
         Route::get("/trails", "displayTrailsPage");
     });
 });

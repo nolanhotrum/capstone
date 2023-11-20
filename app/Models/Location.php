@@ -23,6 +23,16 @@ class Location extends Model
         'add_info'
     ];
 
+    public function park()
+    {
+        return $this->hasOne(Park::class);
+    }
+
+    public function trail()
+    {
+        return $this->hasOne(Trail::class);
+    }
+
     // Define the 'comments' relationship
     public function comments()
     {

@@ -15,6 +15,11 @@ class Park extends Model
         return $this->hasMany(Comment::class);
     }
 
+    public function location()
+    {
+        return $this->belongsTo(Location::class);
+    }
+
     public function ratings()
     {
         return $this->hasMany(Rating::class);
