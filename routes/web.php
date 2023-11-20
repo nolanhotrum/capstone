@@ -42,10 +42,6 @@ Route::controller(ResetPasswordController::class)->group(function () {
     Route::post('password/reset', 'reset')->name('password.update');
 });
 
-
-// If needed, uncomment the following line to add data to the database
-// Route::get('/insert-data-from-json', [LocationController::class, 'insertDataFromJson']);
-
 Route::get('/', [LocationController::class, 'showMap'])->name('home');
 Route::get('/locations/{id}', [LocationController::class, 'showLocation'])->name('locations.show');
 
@@ -64,19 +60,15 @@ Route::middleware(['auth'])->group(function () {
 });
 
 
-
 Route::get('/login', function () {
     return view('login');
 });
-
 
 
 Route::middleware(['auth'])->group(function () {
     Route::get('/recommendation/create', [RecommendationController::class, 'create'])->name('recommendation.create');
     Route::post('/recommendation', [RecommendationController::class, 'store'])->name('recommendation.store');
 });
-
-
 
 
 Route::controller(UserAuthController::class)->group(function () {
@@ -93,8 +85,6 @@ Route::middleware(['auth'])->group(function () {
     Route::controller(UserAuthController::class)->group(function () {
         Route::get("/recommendation", "displayRecommendationPage");
         Route::get('/parks', [ParksController::class, 'index']);
-        Route::get("/trails", "displayTrailsPage");
+        Route::get('/trails', [TrailsController::class, 'index']);
     });
 });
-
-// Route::get('/parks/{park}', [ParkController::class, 'showParks'])->name('park.show');
