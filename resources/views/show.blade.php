@@ -11,6 +11,76 @@
 
 <br><br>
 
+<!-- Display Google Map -->
+<div id="map" style="width: 100%; height: 600px;"></div>
+
+<script>
+    let map;
+    let directionsService;
+    let directionsRenderer;
+
+    function initMap() {
+        // Initialize map
+        map = new google.maps.Map(document.getElementById("map"), {
+            center: {
+                lat: parseFloat('{{ $location->latitude }}'),
+                lng: parseFloat('{{ $location->longitude }}'),
+            },
+            zoom: 12, // Adjust the zoom level to ensure directions are visible
+        });
+
+        // Initialize directions service and renderer
+        directionsService = new google.maps.DirectionsService();
+        directionsRenderer = new google.maps.DirectionsRenderer({
+            map: map,
+        });
+
+        // Get user's current location (if available)
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(
+                (position) => {
+                    const userLocation = new google.maps.LatLng(
+                        position.coords.latitude,
+                        position.coords.longitude
+                    );
+
+                    // Display directions from user's location to the location
+                    displayDirections(userLocation);
+                },
+                (error) => {
+                    console.error("Error getting user location:", error);
+                }
+            );
+        }
+    }
+
+    function displayDirections(userLocation) {
+        const destination = new google.maps.LatLng(
+            parseFloat('{{ $location->latitude }}'),
+            parseFloat('{{ $location->longitude }}')
+        );
+
+        // Request directions from user's location to the destination
+        directionsService.route({
+                origin: userLocation,
+                destination: destination,
+                travelMode: google.maps.TravelMode.DRIVING,
+            },
+            (response, status) => {
+                if (status === "OK") {
+                    // Display the directions on the map
+                    directionsRenderer.setDirections(response);
+                } else {
+                    console.error("Directions request failed:", status);
+                }
+            });
+    }
+</script>
+
+<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD-7uGxcXtxOHLNCj867iBF6CfAP0IDeFw&callback=initMap"></script>
+
+<!-- Other location details... -->
+
 <h2>Rating: {{ $location->rating }} ({{ $location->rating_count }} votes)</h2>
 
 @auth

@@ -28,9 +28,13 @@
             <td>{{ $parkRequest->add_info }}</td>
             <td>{{ $parkRequest->status }}</td>
             <td>
+                @if($parkRequest->status === 'pending')
                 <a href="{{ route('admin.recommendation.approveDeny', ['id' => $parkRequest->id, 'action' => 'approve']) }}">Approve</a>
                 |
                 <a href="{{ route('admin.recommendation.approveDeny', ['id' => $parkRequest->id, 'action' => 'deny']) }}">Deny</a>
+                @else
+                {{ $parkRequest->status }}
+                @endif
             </td>
         </tr>
         @endforeach

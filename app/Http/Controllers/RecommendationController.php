@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Recommendation;
+use App\Models\Location;
 use GuzzleHttp\Client;
 
 class RecommendationController extends Controller
@@ -91,5 +92,45 @@ class RecommendationController extends Controller
         } catch (\Exception $e) {
             return null; // Return null instead of using dd
         }
+    }
+
+
+    public function approveDeny($id, $action)
+    {
+        $recommendation = Recommendation::findOrFail($id);
+
+        if ($action === 'approve') {
+            $this->approveRecommendation($recommendation);
+        } elseif ($action === 'deny') {
+            $this->denyRecommendation($recommendation);
+        }
+
+        return redirect()->route('admin');
+    }
+
+    private function approveRecommendation(Recommendation $recommendation)
+    {
+        // Map the string type to the corresponding integer value
+        $typeMapping = [
+            'Park' => 1,
+            'Trail' => 2,
+        ];
+
+        $recommendation->update(['status' => 'approved']);
+
+        // Add the recommendation to the locations table
+        Location::create([
+            'type_id' => $typeMapping[$recommendation->type],
+            'park_name' => $recommendation->park_name,
+            'address' => $recommendation->address,
+            'add_info' => $recommendation->add_info,
+            'latitude' => $recommendation->latitude,
+            'longitude' => $recommendation->longitude,
+            'community' => 'Hamilton',
+        ]);
+    }
+    private function denyRecommendation(Recommendation $recommendation)
+    {
+        $recommendation->update(['status' => 'denied']);
     }
 }

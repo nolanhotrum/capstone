@@ -56,8 +56,9 @@ Route::post('/locations/{id}/rate', [RatingController::class, 'rate'])->name('lo
 
 Route::middleware(['auth'])->group(function () {
     Route::get('/admin', [AdminController::class, 'showParkRequests'])->name('admin');
-    Route::get('/admin/recommendation/{id}/{action}', [RecommendationController::class, 'approveDeny'])->name('admin.recommendation.approveDeny');
+    Route::get('/admin/recommendation/approve-deny/{id}/{action}', [RecommendationController::class, 'approveDeny'])->name('admin.recommendation.approveDeny');
 });
+
 
 
 Route::get('/login', function () {

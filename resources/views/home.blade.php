@@ -24,14 +24,14 @@
         featureType: "poi.business",
         stylers: [{
           visibility: "off",
-        }, ],
+        }],
       },
       {
         featureType: "transit",
         elementType: "labels.icon",
         stylers: [{
           visibility: "off",
-        }, ],
+        }],
       },
     ],
   };
@@ -49,6 +49,9 @@
 
   // Function to add markers to the map
   function addMarkersToMap(locations) {
+    const markers = [];
+    const infowindows = [];
+
     locations.forEach((location) => {
       let markerOptions = {
         position: {
@@ -57,24 +60,35 @@
         },
         map: map,
         title: location.park_name,
+        icon: 'https://maps.google.com/mapfiles/ms/icons/blue.png', // Example icon URL
       };
 
       let marker = new google.maps.Marker(markerOptions);
+      markers.push(marker);
+
       let type = location.type_id === 1 ? "Park" : location.type_id === 2 ? "Trail" : "Unknown";
 
       let infoWindow = new google.maps.InfoWindow({
         content: `
-          <h3>${location.park_name}</h3>
-          <p><strong>Address:</strong> ${location.address}</p>
-          <p><strong>Type:</strong> ${type}</p>
-          <p><strong>Community:</strong> ${location.community}</p>
-          <p>${location.add_info}</p>
-        `,
+        <h3>${location.park_name}</h3>
+        <p><strong>Address:</strong> ${location.address}</p>
+        <p><strong>Type:</strong> ${type}</p>
+        <p><strong>Community:</strong> ${location.community}</p>
+        <p>${location.add_info}</p>
+      `,
       });
 
       marker.addListener("click", () => {
+        infowindows.forEach((infowindow) => infowindow.close());
         infoWindow.open(map, marker);
       });
+
+      infowindows.push(infoWindow);
+    });
+
+    // Marker clustering
+    const markerCluster = new MarkerClusterer(map, markers, {
+      imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m',
     });
   }
 
@@ -116,19 +130,12 @@
 
   function loadGoogleMapsScript() {
     const script = document.createElement("script");
-    script.src = `https://maps.googleapis.com/maps/api/js?key=AIzaSyD-7uGxcXtxOHLNCj867iBF6CfAP0IDeFw&callback=initMap&v=weekly`;
+    script.src = `https://maps.googleapis.com/maps/api/js?key=AIzaSyD-7uGxcXtxOHLNCj867iBF6CfAP0IDeFw&callback=initMap&v=weekly&libraries=visualization,geometry,places`;
     script.defer = true;
     document.head.appendChild(script);
   }
 
   loadGoogleMapsScript();
 </script>
-
-
-
-
-
-
-
 
 @endsection
