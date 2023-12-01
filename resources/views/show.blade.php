@@ -174,8 +174,9 @@
     </div>
 </div>
 
-<br><br>
-<br><br>
+<br /><br />
+<br /><br />
+
 
 @else
 <p>Location not found.</p>
