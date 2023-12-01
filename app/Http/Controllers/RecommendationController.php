@@ -85,12 +85,25 @@ class RecommendationController extends Controller
             $data = json_decode($response->getBody(), true);
 
             if (isset($data['results'][0]['geometry']['location'])) {
-                return $data['results'][0]['geometry']['location'];
+                $location = $data['results'][0]['geometry']['location'];
+
+                // Check if the response has address components
+                if (isset($data['results'][0]['address_components'])) {
+                    foreach ($data['results'][0]['address_components'] as $component) {
+                        // Look for the "locality" type, which usually represents the city or community
+                        if (in_array('locality', $component['types'])) {
+                            $location['community'] = $component['long_name'];
+                            break;
+                        }
+                    }
+                }
+
+                return $location;
             } else {
-                return null; // Return null instead of using dd
+                return null;
             }
         } catch (\Exception $e) {
-            return null; // Return null instead of using dd
+            return null;
         }
     }
 
@@ -118,6 +131,10 @@ class RecommendationController extends Controller
 
         $recommendation->update(['status' => 'approved']);
 
+        // Geocode the address to get the community
+        $geoData = $this->geocodeAddress($recommendation->address);
+        $community = $geoData ? $geoData['community'] : 'Unknown';
+
         // Add the recommendation to the locations table
         Location::create([
             'type_id' => $typeMapping[$recommendation->type],
@@ -126,7 +143,7 @@ class RecommendationController extends Controller
             'add_info' => $recommendation->add_info,
             'latitude' => $recommendation->latitude,
             'longitude' => $recommendation->longitude,
-            'community' => 'Hamilton',
+            'community' => $community,
         ]);
     }
     private function denyRecommendation(Recommendation $recommendation)

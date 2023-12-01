@@ -3,10 +3,6 @@
 @section("content")
 <h1>Home Page</h1>
 
-@foreach ($locations as $location)
-<a href="{{ route('locations.show', $location->id) }}">{{ $location->park_name }}, </a>
-@endforeach
-
 <div id="style-selector-control" class="map-control">
   <input type="radio" name="show-hide" id="hide-poi" class="selector-control" />
   <label for="hide-poi">Hide</label>
@@ -14,43 +10,58 @@
   <label for="show-poi">Show</label>
 </div>
 
-<div id="map" style="width: 100%; height: 600px;"></div>
+<div id="map" style="width: 100%; height: 700px;"></div>
 
 <script>
   let map;
   const styles = {
     default: [],
     hide: [{
-        featureType: "poi.business",
+        featureType: "poi",
+        elementType: "labels",
         stylers: [{
-          visibility: "off",
+          visibility: "off"
+        }],
+      },
+      {
+        featureType: "poi",
+        elementType: "geometry",
+        stylers: [{
+          visibility: "off"
         }],
       },
       {
         featureType: "transit",
         elementType: "labels.icon",
         stylers: [{
-          visibility: "off",
+          visibility: "off"
+        }],
+      },
+      {
+        featureType: "transit",
+        elementType: "labels.text.fill",
+        stylers: [{
+          visibility: "off"
         }],
       },
     ],
   };
 
-  // Function to cache marker data in local storage
+  // Pass locations from PHP to JavaScript
+  const locations = @json($locations);
+
   function cacheLocations(locations) {
     localStorage.setItem("cachedLocations", JSON.stringify(locations));
   }
 
-  // Function to get cached marker data from local storage
   function getCachedLocations() {
     let cachedData = localStorage.getItem("cachedLocations");
     return cachedData ? JSON.parse(cachedData) : null;
   }
 
-  // Function to add markers to the map
   function addMarkersToMap(locations) {
     const markers = [];
-    const infowindows = [];
+    let currentInfoWindow = null;
 
     locations.forEach((location) => {
       let markerOptions = {
@@ -60,7 +71,7 @@
         },
         map: map,
         title: location.park_name,
-        icon: 'https://maps.google.com/mapfiles/ms/icons/blue.png', // Example icon URL
+        icon: 'https://maps.google.com/mapfiles/ms/icons/blue.png',
       };
 
       let marker = new google.maps.Marker(markerOptions);
@@ -70,20 +81,22 @@
 
       let infoWindow = new google.maps.InfoWindow({
         content: `
-        <h3>${location.park_name}</h3>
-        <p><strong>Address:</strong> ${location.address}</p>
-        <p><strong>Type:</strong> ${type}</p>
-        <p><strong>Community:</strong> ${location.community}</p>
-        <p>${location.add_info}</p>
-      `,
+          <h3><a href="{{ url('/locations') }}/${location.id}">${location.park_name}</a></h3>
+          <p><strong>Address:</strong> ${location.address}</p>
+          <p><strong>Type:</strong> ${type}</p>
+          <p><strong>Community:</strong> ${location.community}</p>
+          <p>${location.add_info}</p>
+        `,
       });
 
       marker.addListener("click", () => {
-        infowindows.forEach((infowindow) => infowindow.close());
-        infoWindow.open(map, marker);
-      });
+        if (currentInfoWindow) {
+          currentInfoWindow.close();
+        }
 
-      infowindows.push(infoWindow);
+        infoWindow.open(map, marker);
+        currentInfoWindow = infoWindow;
+      });
     });
 
     // Marker clustering
@@ -100,6 +113,7 @@
       },
       zoom: 12,
       mapTypeControl: false,
+      styles: styles["hide"], // Set 'hide' style by default
     });
 
     const styleControl = document.getElementById("style-selector-control");
@@ -117,11 +131,9 @@
       });
     });
 
-    // If no cached data is available, use the data from $locationsJson
     let cachedLocations = getCachedLocations();
     if (!cachedLocations) {
-      let locations = JSON.parse('{!! addslashes($locationsJson) !!}');
-      cacheLocations(locations); // Cache the data for future use
+      cacheLocations(locations);
       addMarkersToMap(locations);
     } else {
       addMarkersToMap(cachedLocations);
@@ -137,5 +149,4 @@
 
   loadGoogleMapsScript();
 </script>
-
 @endsection

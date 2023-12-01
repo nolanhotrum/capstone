@@ -12,9 +12,8 @@ class AdminController extends Controller
         $user = auth()->user();
 
         if ($user && $user->role === 1) {
-            // Fetch all recommendations with a pending status
-            $parkRequests = Recommendation::where('status', 'pending')
-                ->get();
+            // Fetch all recommendations
+            $parkRequests = Recommendation::all();
 
             return view('admin', ['parkRequests' => $parkRequests]);
         } else {

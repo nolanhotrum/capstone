@@ -3,7 +3,10 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <script src="https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/markerclusterer.js"></script>
     <title>Dog's Way</title>
     <style>
         /* Theming */
@@ -29,6 +32,9 @@
         body {
             background-color: var(--white);
             font-family: "Poppins", sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
 
         a {
@@ -60,22 +66,45 @@
         }
 
         .logo {
-            width: 40px;
+            width: 70px;
+            height: 70px;
+            /* Set the height to match the navbar height */
             margin-right: 10px;
         }
 
         .logo img {
             width: 100%;
+            height: 100%;
+            /* Ensure the image fills the entire space of the logo container */
         }
+
+
+        #map-container {
+            width: 100%;
+            height: 600px;
+            margin-bottom: 20px;
+        }
+
 
         .longName,
         .shortName {
             color: #fff;
-            font-size: 24px;
+            font-size: 32px;
+            /* Adjusted font size */
+            font-weight: 700;
+            text-decoration: none;
+            letter-spacing: 2px;
+            /* Increased letter spacing */
+            font-family: 'Poppins', sans-serif;
+            display: flex;
+            align-items: center;
         }
 
         .longName {
-            display: inline-block;
+            flex-grow: 1;
+            /* Takes up remaining space */
+            justify-content: center;
+            /* Center horizontally */
         }
 
         .shortName {
@@ -83,8 +112,13 @@
         }
 
         .nav {
-            margin-left: 20px;
             display: flex;
+            align-items: center;
+            /* Center vertically */
+        }
+
+        .rating i.active {
+            color: gold;
         }
 
         nav ul {
@@ -115,7 +149,6 @@
 
         .hamburger {
             display: none;
-            margin-left: 20px;
             cursor: pointer;
         }
 
@@ -146,7 +179,413 @@
             top: -5px;
         }
 
-        /* Media query for smaller screens */
+        h1.login-page-title {
+            color: var(--black);
+            margin: 20px 0;
+            /* Adjusted margin for better alignment */
+        }
+
+        .borderFooter {
+            background-color: var(--green);
+            /* Change to your preferred green color */
+            color: var(--white);
+            text-align: center;
+            padding: 10px;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            z-index: 1001;
+            /* Ensures the footer is above other content */
+        }
+
+        .login-container {
+            max-width: 400px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            color: var(--black);
+            margin-bottom: 20px;
+            font-size: 36px;
+            /* Adjusted font size */
+            font-weight: 700;
+            letter-spacing: 1px;
+            /* Adjusted letter spacing */
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            margin-bottom: 5px;
+            color: var(--black);
+        }
+
+        input.login-input {
+            /* Unique identifier for login page input */
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid var(--gray);
+            border-radius: 5px;
+        }
+
+        a.login-link {
+            /* Unique identifier for login page link */
+            color: var(--darker-green);
+            margin-bottom: 15px;
+            text-decoration: none;
+        }
+
+        input.login-submit {
+            /* Unique identifier for login page submit button */
+            background-color: var(--green);
+            color: #fff;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        input.login-submit:hover {
+            /* Unique identifier for login page hover effect */
+            background-color: var(--darker-green);
+        }
+
+        /* New containers for layout */
+        .logo-container,
+        .title-container,
+        .nav-container {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            text-align: center;
+        }
+
+        .logo-container,
+        .title-container,
+        .nav-container {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            text-align: center;
+        }
+
+        .title-container {
+            flex-grow: 1;
+            display: flex;
+            justify-content: center;
+        }
+
+        .longName {
+            display: none;
+        }
+
+        .shortName {
+            display: inline-block;
+        }
+
+        .title-container {
+            justify-content: center;
+        }
+
+        .nav-container {
+            justify-content: flex-end;
+        }
+
+        .title-container {
+            flex-grow: 1;
+            display: flex;
+            justify-content: center;
+        }
+
+        .longName {
+            display: none;
+        }
+
+        .shortName {
+            display: inline-block;
+        }
+
+        .title-container {
+            justify-content: center;
+        }
+
+        .nav-container {
+            justify-content: flex-end;
+        }
+
+
+
+        .content-container {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .comments {
+            flex: 1;
+            margin-right: 20px;
+        }
+
+        .ratings {
+            flex: 1;
+        }
+
+        .ratings h2,
+        .comments h2 {
+            border-bottom: 2px solid var(--green);
+            padding-bottom: 10px;
+            margin-bottom: 10px;
+            font-size: 24px;
+        }
+
+        .comment {
+            border: 1px solid var(--border-color);
+            border-radius: 5px;
+            margin-bottom: 15px;
+            padding: 10px;
+            overflow: hidden;
+        }
+
+        .comment p {
+            margin-bottom: 10px;
+            color: var(--black);
+        }
+
+        .comment-body {
+            clear: both;
+            font-size: 20px;
+        }
+
+        .timestamp,
+        .username {
+            color: var(--gray);
+            font-style: italic;
+            font-size: 13px;
+            display: inline;
+            /* Keep them on the same line */
+            margin-right: 10px;
+            /* Add margin between timestamp and username */
+        }
+
+        .username {
+            color: var(--black);
+            font-weight: bold;
+        }
+
+
+        .main-content {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+            align-items: flex-start;
+            /* Align items to the start of the cross axis (vertically) */
+        }
+
+        .h1 {
+            text-align: center;
+            /* Center the title */
+        }
+
+        /* Add this to your existing styles */
+        #filter {
+            margin-bottom: 20px;
+        }
+
+        .park-box {
+            flex: 0 0 calc(33.33% - 20px);
+            margin-bottom: 20px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            overflow: hidden;
+            margin-right: 20px;
+            /* Add margin between park boxes */
+        }
+
+        .park-details {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            padding: 15px;
+        }
+
+        .park-name {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        .park-info {
+            font-size: 16px;
+            color: var(--gray);
+        }
+
+        /* Add this to your existing styles */
+        #recommendation-content {
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        #recommendation-form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        #recommendation-label {
+            margin-bottom: 5px;
+            color: var(--black);
+        }
+
+        #recommendation-input,
+        #recommendation-select,
+        #recommendation-textarea {
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid var(--gray);
+            border-radius: 5px;
+        }
+
+        #recommendation-submit {
+            background-color: var(--green);
+            color: #fff;
+            cursor: pointer;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        #recommendation-submit:hover {
+            background-color: var(--darker-green);
+        }
+
+        /* Adjust styling for success and error messages */
+        #recommendation-success,
+        #recommendation-error {
+            margin-bottom: 15px;
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        #recommendation-success {
+            background-color: #4ad295;
+            color: #fff;
+        }
+
+        #recommendation-error {
+            background-color: #ff6363;
+            color: #fff;
+        }
+
+
+        #trails-filter {
+            margin-bottom: 20px;
+        }
+
+        .trail-box {
+            flex: 0 0 calc(33.33% - 20px);
+            margin-bottom: 20px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            overflow: hidden;
+            margin-right: 20px;
+        }
+
+        .trail-details {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            padding: 15px;
+        }
+
+        .trail-name {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        .trail-info {
+            font-size: 16px;
+            color: var(--gray);
+        }
+
+
+        #admin-park-requests {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        #no-requests-message {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        #admin-park-requests-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        .admin-park-request {
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .request-id,
+        .user-name,
+        .park-name,
+        .park-address,
+        .additional-info,
+        .request-status,
+        .request-actions {
+            padding: 10px;
+        }
+
+        .request-actions a {
+            text-decoration: none;
+            color: var(--green);
+        }
+
+        .request-actions a:hover {
+            text-decoration: underline;
+        }
+
+        .admin-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        .admin-table th,
+        .admin-table td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid var(--gray);
+            /* Add border */
+        }
+
+        .admin-actions a {
+            text-decoration: none;
+            color: var(--green);
+            margin-right: 10px;
+            /* Adjust as needed */
+        }
+
+        .admin-actions a:hover {
+            text-decoration: underline;
+        }
+
+        /* Media query for screens 1000 pixels and below */
         @media only screen and (max-width: 1000px) {
             .header-content {
                 padding: 0 10px;
@@ -158,6 +597,11 @@
 
             .shortName {
                 display: inline-block;
+            }
+
+            .title-container {
+                flex-grow: 1;
+                justify-content: center;
             }
 
             .nav {
@@ -182,6 +626,56 @@
 
             .hamburger {
                 display: flex;
+            }
+
+            #map-container {
+                height: 300px;
+                /* Adjust the height as needed */
+            }
+
+            .comment {
+                border: 1px solid var(--border-color);
+                border-radius: 5px;
+                margin-bottom: 15px;
+                padding: 10px;
+                overflow: hidden;
+                /* Clear the float */
+            }
+
+            .comment p {
+                margin-bottom: 10px;
+                color: var(--black);
+            }
+
+            .comment-body {
+                clear: both;
+            }
+
+
+            .add-comment {
+                margin-top: 20px;
+            }
+
+            .add-comment textarea {
+                width: 100%;
+                padding: 10px;
+                margin-bottom: 10px;
+                border: 1px solid var(--border-color);
+                border-radius: 5px;
+            }
+
+            .add-comment button {
+                background-color: var(--green);
+                color: #fff;
+                padding: 10px;
+                border: none;
+                border-radius: 5px;
+                cursor: pointer;
+                transition: background-color 0.3s ease;
+            }
+
+            .add-comment button:hover {
+                background-color: var(--darker-green);
             }
 
             .menu a {
@@ -216,6 +710,21 @@
             .side-menu:checked~.hamburger .hamburger-line::after {
                 transform: rotate(45deg);
                 top: 0;
+            }
+        }
+
+        /* Media query for screens above 1000 pixels */
+        @media only screen and (min-width: 1001px) {
+            .longName {
+                display: flex;
+            }
+
+            .shortName {
+                display: none;
+            }
+
+            .title-container {
+                justify-content: center;
             }
         }
     </style>

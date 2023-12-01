@@ -1,37 +1,37 @@
 @extends("layout")
 
 @section("content")
-<p>Register page.</p>
-<form method="POST" action="/attempt_register">
+<h1 class="login-page-title">Register Page</h1>
+<form method="POST" action="/attempt_register" class="login-container">
     @csrf
     <label for="name">Name: </label>
-    <input id="name" type="text" name="name" value="{{ old('name') }}" required autofocus />
+    <input id="name" type="text" name="name" value="{{ old('name') }}" class="login-input" required />
     @error('name')
     <p>{{ $message }}</p>
     @enderror
     <br /> <br />
 
     <label for="email">Email: </label>
-    <input id="email" type="email" name="email" value="{{ old('email') }}" required />
+    <input id="email" type="email" name="email" value="{{ old('email') }}" class="login-input" required />
     @error('email')
     <p>{{ $message }}</p>
     @enderror
     <br /> <br />
 
     <label for="password">Password: </label>
-    <input id="password" type="password" name="password" required />
+    <input id="password" type="password" name="password" class="login-input" required />
     @error('password')
     <p>{{ $message }}</p>
     @enderror
     <br /> <br />
 
     <label for="password_confirmation">Confirm Password: </label>
-    <input id="password_confirmation" type="password" name="password_confirmation" required />
+    <input id="password_confirmation" type="password" name="password_confirmation" class="login-input" required />
     @error('password_confirmation')
     <p>{{ $message }}</p>
     @enderror
     <br /> <br />
 
-    <input type="submit" value="Register" />
+    <input type="submit" value="Register" class="login-submit" />
 </form>
 @endsection
