@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link rel="stylesheet" href="/css/style2.css">
     <script src="https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/markerclusterer.js"></script>
     <title>Dog's Way</title>
     <style>
@@ -195,6 +196,7 @@
             bottom: 0;
             width: 100%;
             z-index: 1001;
+            margin-top: 20px;
             /* Ensures the footer is above other content */
         }
 
