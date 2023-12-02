@@ -166,14 +166,15 @@
         <p>No comments available for this location.</p>
         @endif
 
-        @guest
-        <!-- Content for non-logged-in users -->
-        <p>Please log in to leave a comment or rate this park.</p>
-        <a href="{{ route('login') }}">Log In</a>
-        @endguest
+
     </div>
 </div>
-
+<div>
+    @guest
+    <!-- Content for non-logged-in users -->
+    <p>Please <a href="{{ route('login') }}">log in</a> to leave a comment or rate this park.</p>
+    @endguest
+</div>
 <br /><br />
 <br /><br />
 
