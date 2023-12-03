@@ -2,7 +2,7 @@
 
 @section("content")
 
-<div class="main-content">
+<div class="main-content password-reset">
 	<h1>Password Reset</h1>
 	<form method="POST" class="my-login-validation" novalidate="" action="{{ route('password.email') }}">
 		@csrf

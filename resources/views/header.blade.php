@@ -729,5 +729,69 @@
                 justify-content: center;
             }
         }
+
+
+
+        /* Adjusted Styles for Password Reset Pages */
+        body {
+            background-color: var(--white);
+            font-family: "Poppins", sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 0;
+            /* Remove default margin for full-width */
+        }
+
+        .container {
+            margin-top: 50px;
+            /* Adjusted margin for better alignment */
+        }
+
+        .card {
+            border: none;
+            /* Remove card border */
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .card-header {
+            background-color: var(--green);
+            color: #fff;
+            font-weight: bold;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .card-body {
+            padding: 20px;
+        }
+
+        .form-control {
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid var(--gray);
+            border-radius: 5px;
+        }
+
+        .invalid-feedback {
+            color: #721c24;
+        }
+
+        .btn-primary {
+            background-color: var(--green);
+            color: #fff;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--darker-green);
+        }
+
+        /* Media query for screens below 1000 pixels */
+        @media only screen and (max-width: 1000px) {
+            .container {
+                margin-top: 20px;
+            }
+        }
     </style>
 </head>
